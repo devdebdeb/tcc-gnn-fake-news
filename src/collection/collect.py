@@ -1,4 +1,4 @@
-# src/collection/data_collection.py
+# src/collection/collect.py
 
 import logging
 import os
@@ -6,6 +6,7 @@ import time
 from typing import Dict, List, Tuple
 
 import pandas as pd
+import atproto
 from atproto import Client, models
 from dotenv import load_dotenv
 
@@ -18,11 +19,11 @@ logging.basicConfig(
 
 def login_bluesky() -> Client:
     """Realiza o login no Bluesky usando credenciais do arquivo .env."""
-    handle = os.getenv("BLUESKY_HANDLE")
-    senha = os.getenv("BLUESKY_PASSWORD")
+    handle = os.getenv("BSKY_HANDLE")
+    senha = os.getenv("BSKY_PASSWORD")
 
     if not handle or not senha:
-        msg = "Credenciais BLUESKY_HANDLE ou BLUESKY_PASSWORD não encontradas."
+        msg = "Credenciais BSKY_HANDLE ou BSKY_PASSWORD não encontradas."
         logging.error(msg)
         raise ValueError(f"{msg} Verifique seu arquivo .env.")
 
@@ -34,6 +35,7 @@ def login_bluesky() -> Client:
     except Exception as e:
         logging.error(f"Falha no login: {e}")
         raise
+
 
 def _processar_batch_de_posts(
     client: Client, posts: List[models.AppBskyFeedDefs.PostView]

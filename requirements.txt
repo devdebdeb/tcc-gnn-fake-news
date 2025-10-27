@@ -1,6 +1,8 @@
 atproto
 networkx
 python-louvain
+sentence-transformers
+pyarrow
 
 python-dotenv
 pyvis
