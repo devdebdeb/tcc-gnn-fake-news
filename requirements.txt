@@ -1,0 +1,13 @@
+atproto
+networkx
+python-louvain
+
+python-dotenv
+pyvis
+
+pandas
+matplotlib
+seaborn
+
+black
+flake8
