@@ -3,6 +3,8 @@ networkx
 python-louvain
 sentence-transformers
 pyarrow
+torch
+torch_geometric
 
 python-dotenv
 pyvis

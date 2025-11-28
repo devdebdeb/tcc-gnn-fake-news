@@ -145,3 +145,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+scikit-learn 
+
+UPFD/data/UPFD/politifact/raw/new_bert_feature.npz
+UPFD/data/UPFD/politifact/raw/new_bert_feature.npz
