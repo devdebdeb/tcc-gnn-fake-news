@@ -193,3 +193,5 @@ Icon?
 # Regras específicas do projeto (mantidas)
 UPFD/data/UPFD/politifact/raw/new_bert_feature.npz
 14669616.zip
+politifact/politifact.zip
+politifact/raw/new_bert_feature.npz
