@@ -1,0 +1,17 @@
+import os
+import sys
+import torch
+import pandas as pd
+from dotenv import load_dotenv
+
+# Adiciona o path para o Blue Sky src
+sys.path.append(os.path.join(os.getcwd(), "Blue Sky", "src"))
+from collection import collect
+
+def testar_fresh():
+    print("Teste de Dados Frescos Restaurado.")
+    # Lógica para coletar posts de HOJE e testar no modelo
+    pass
+
+if __name__ == "__main__":
+    testar_fresh()

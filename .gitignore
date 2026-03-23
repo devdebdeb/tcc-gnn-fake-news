@@ -155,3 +155,7 @@ politifact/raw/new_bert_feature.npz
 
 # Node
 node_modules/
+.next/
+
+# Databases
+*.db
