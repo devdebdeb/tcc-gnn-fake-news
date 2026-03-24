@@ -171,6 +171,86 @@ export default function Home() {
           </div>
         )}
 
+        {/* About TCC Section */}
+        <div className="mt-24 mb-16 max-w-5xl mx-auto animate-in fade-in duration-1000 delay-500">
+          <div className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-[2.5rem] backdrop-blur-2xl">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              Sobre o Projeto de TCC
+            </h2>
+            
+            <div className="prose prose-invert prose-lg max-w-none text-gray-300">
+              <p>
+                Este portal web (<strong>Truth GNN Analytics</strong>) é a aplicação prática oficial que acompanha o Trabalho de Conclusão de Curso <em>"Detecção de Fake News em Redes Sociais utilizando Graph Neural Networks"</em>.
+              </p>
+              <p className="mt-4 text-justify">
+                Redes sociais contêm uma topologia riquíssima que a leitura simples de texto acaba negligenciando. Nossa abordagem modelou os posts do <strong>Bluesky</strong> e suas interações orgânicas como Árvores de Propagação (Grafos estendidos). Extraímos primeiro as coordenadas semânticas textuais através do BERT-Base e fundimos os tensores com a topologia estrutural mapeada via Redes Convolucionais de Grafos (<strong>GCN</strong>).
+              </p>
+              
+              <h3 className="text-2xl font-bold text-white mt-10 mb-4">Metodologia Ponderada (Ensemble Framework)</h3>
+              <p className="text-justify">
+                Ao invés de confiar de olhos vendados num único modelo "Mestre", a ferramenta abriga ativamente um motor <em>Ensemble</em> com algoritmos instanciados de forma paralela usando PyTorch e FastAPI. Avaliações profundas (Ablation Study) atestaram que treinar IA's em nichos isolados (e.g., antigo Twitter/UPFD) provoca baixíssima capacidade de rastreio em dados <em>Open-source</em> massivos do Bluesky sem rotulagem fechada, necessitando algoritmos mais "Céticos".
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div className="bg-black/40 p-4 rounded-xl border border-white/5">
+                  <span className="text-xs text-gray-400 font-mono uppercase tracking-wider mb-2 block text-center">Performance do UPFD no Bluesky</span>
+                  <img src="/images/matriz_upfd_vs_bs_aberto.png" alt="Matriz UPFD" className="w-full rounded-lg shadow-lg opacity-90 hover:opacity-100 transition-opacity" />
+                  <p className="text-sm text-gray-400 mt-3 text-center">Altíssimas taxas cruzadas de Falsos Reais.</p>
+                </div>
+                <div className="bg-black/40 p-4 rounded-xl border border-white/5">
+                  <span className="text-xs text-gray-400 font-mono uppercase tracking-wider mb-2 block text-center">Exageradamente Cético (6x Penalidade)</span>
+                  <img src="/images/matriz_bs_exa_cetico_vs_bs_aberto.png" alt="Matriz Cética" className="w-full rounded-lg shadow-lg opacity-90 hover:opacity-100 transition-opacity" />
+                  <p className="text-sm text-gray-400 mt-3 text-center">Filtro otimizado para expurgo severo de Fakes.</p>
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-bold text-white mt-12 mb-4">Comportamento Topológico vs Impulsionalidade</h3>
+              <p className="text-justify">
+                A aplicação expôs estatisticamente (ver gráfico abaixo) que o índice de Vulnerabilidade das Redes de Grafo escala perigosamente quando reduzida a capilaridade da notícia. Ou seja: Publicações Falsas com baixa taxa de comentários (menos de 5 engajamentos) perdem a base de metadados relacionais essencial ao modelo, gerando <em>picos alarmantes de Falsos Reais</em> pela ausência gráfica mitigada no modelo base.
+              </p>
+
+              <div className="mt-8 bg-black/40 p-5 rounded-xl border border-white/5 flex flex-col items-center justify-center text-center">
+                <span className="text-xs text-gray-400 font-mono uppercase tracking-wider mb-4 block">Distribuição de Erros por Volume Nodal</span>
+                <img src="/images/vulnerabilidade_topologia.png" alt="Topologia e Vulnerabilidade" className="w-full max-w-2xl mx-auto rounded-lg shadow-lg opacity-90 hover:opacity-100 transition-opacity" />
+                <p className="text-sm mt-4 text-gray-400">Posts menos populares exigem um processador predominantemente Neurolinguístico contra a arquitetura focada puramente em dispersão de grafos.</p>
+              </div>
+
+              {/* Equipe / Autores */}
+              <div className="mt-16 pt-10 border-t border-white/10">
+                <h3 className="text-2xl font-bold text-white mb-8 text-center">Pesquisadores (Trabalho de Conclusão de Curso)</h3>
+                <div className="flex flex-wrap justify-center gap-6">
+                  
+                  <a href="https://cesarsibila.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-4 rounded-2xl transition-all hover:scale-105 no-underline">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center text-xl font-bold text-white shadow-lg">C</div>
+                    <div>
+                      <div className="font-bold text-gray-100 m-0 leading-tight">César Sibila</div>
+                      <div className="text-xs text-blue-400 font-mono mt-1">Website Pessoal</div>
+                    </div>
+                  </a>
+
+                  <a href="https://www.linkedin.com/in/andre-messina-506179239/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-4 rounded-2xl transition-all hover:scale-105 no-underline">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-400 flex items-center justify-center text-xl font-bold text-white shadow-lg">AM</div>
+                    <div>
+                      <div className="font-bold text-gray-100 m-0 leading-tight">André Messina</div>
+                      <div className="text-xs text-indigo-400 font-mono mt-1">LinkedIn</div>
+                    </div>
+                  </a>
+
+                  <a href="https://github.com/enzotakida" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-4 rounded-2xl transition-all hover:scale-105 no-underline">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-gray-600 to-gray-400 flex items-center justify-center text-xl font-bold text-white shadow-lg">ET</div>
+                    <div>
+                      <div className="font-bold text-gray-100 m-0 leading-tight">Enzo Takida</div>
+                      <div className="text-xs text-gray-400 font-mono mt-1">GitHub</div>
+                    </div>
+                  </a>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   );
