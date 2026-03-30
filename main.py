@@ -1,7 +1,11 @@
 # main.py
 
 import logging
+import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "Blue Sky", "src"))
 
 import networkx as nx
 import pandas as pd

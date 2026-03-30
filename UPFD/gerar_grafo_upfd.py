@@ -27,7 +27,7 @@ def carregar_dataset_upfd():
         # <<< AQUI ESTÁ A CORREÇÃO >>>
         # Mudei "PolitiFact" para "politifact" (tudo minúsculo)
         # =====================================================================
-        dataset = UPFD(root=DATA_PATH, name="politifact", feature="spacy")
+        dataset = UPFD(root=DATA_PATH, name="politifact", feature="bert")
         
         print("\n--- Dataset UPFD Carregado com Sucesso ---")
         print(f"Número total de grafos (notícias): {len(dataset)}")

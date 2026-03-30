@@ -13,7 +13,8 @@ import sys
 from dotenv import load_dotenv
 
 # Adiciona o path para o Blue Sky src
-sys.path.append(os.path.join(os.getcwd(), "Blue Sky", "src"))
+raiz_projeto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(raiz_projeto, "Blue Sky", "src"))
 from collection import collect
 from features import text_embedder
 

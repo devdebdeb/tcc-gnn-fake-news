@@ -100,3 +100,6 @@ xxhash==3.6.0
 yarl==1.22.0
 black
 flake8
+fastapi
+uvicorn[standard]
+sqlalchemy

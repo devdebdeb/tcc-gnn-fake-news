@@ -1,9 +1,11 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-DATABASE_URL = "sqlite:///c:/Users/cesar/Documents/GitHub/tcc-gnn-fake-news/frontend/api/truth_analytics.db"
+_db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "truth_analytics.db")
+DATABASE_URL = f"sqlite:///{_db_path}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
