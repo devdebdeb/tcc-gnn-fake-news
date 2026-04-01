@@ -2,6 +2,145 @@
 import { useState, useEffect } from "react";
 import { Search, ShieldAlert, ShieldCheck, Activity, BarChart3, Clock, Globe } from "lucide-react";
 
+// ─── Visualização do Grafo de Propagação ──────────────────────────────────────
+function GraphViz({ explanation, isFake }: { explanation: any; isFake: boolean }) {
+  if (!explanation || !explanation.edges || explanation.edges.length === 0) {
+    return (
+      <p className="text-center text-gray-500 text-sm py-6">
+        Nó único — sem interações para visualizar.
+      </p>
+    );
+  }
+
+  const W = 520, H = 300;
+  const cx = W / 2, cy = H / 2;
+  const RADIUS = 115;
+
+  // Limita a 12 filhos para não poluir o SVG
+  const edges: Array<{ from: number; to: number; importance: number }> =
+    explanation.edges.slice(0, 12);
+  const numChildren = edges.length;
+
+  const childPos = edges.map((_, i) => {
+    const angle = (2 * Math.PI * i) / numChildren - Math.PI / 2;
+    return { x: cx + RADIUS * Math.cos(angle), y: cy + RADIUS * Math.sin(angle) };
+  });
+
+  const edgeColor = (imp: number) =>
+    imp > 0.66 ? (isFake ? "#ef4444" : "#10b981")
+    : imp > 0.33 ? "#f59e0b"
+    : "#374151";
+
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full max-w-lg mx-auto"
+      aria-label="Grafo de propagação"
+    >
+      {/* Arestas */}
+      {edges.map((e, i) => {
+        const imp = e.importance;
+        const { x, y } = childPos[i];
+        return (
+          <line
+            key={i}
+            x1={cx} y1={cy}
+            x2={x}  y2={y}
+            stroke={edgeColor(imp)}
+            strokeWidth={1 + imp * 5}
+            strokeOpacity={0.35 + imp * 0.65}
+          />
+        );
+      })}
+
+      {/* Nós filhos (interações) */}
+      {edges.map((e, i) => {
+        const imp = e.importance;
+        const { x, y } = childPos[i];
+        const highlight = imp > 0.5;
+        return (
+          <g key={i}>
+            <circle
+              cx={x} cy={y} r={15}
+              fill={highlight ? (isFake ? "#7f1d1d" : "#064e3b") : "#1f2937"}
+              stroke={edgeColor(imp)}
+              strokeWidth={2}
+            />
+            <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle"
+              fill="white" fontSize={8} fontFamily="monospace">
+              {e.to}
+            </text>
+            <title>{`Nó ${e.to} — influência: ${(imp * 100).toFixed(0)}%`}</title>
+          </g>
+        );
+      })}
+
+      {/* Nó raiz */}
+      <circle cx={cx} cy={cy} r={24} fill="#1e3a5f" stroke="#3b82f6" strokeWidth={2.5} />
+      <text x={cx} y={cy - 4} textAnchor="middle" fill="white" fontSize={9} fontWeight="bold">POST</text>
+      <text x={cx} y={cy + 8} textAnchor="middle" fill="#93c5fd" fontSize={7}>raiz</text>
+    </svg>
+  );
+}
+
+// ─── Destaque de palavras por importância BERT ────────────────────────────────
+function WordHighlight({ words }: { words: Array<{ word: string; importance: number }> }) {
+  if (!words || words.length === 0) return null;
+
+  const max = Math.max(...words.map((w) => w.importance), 0.001);
+  // Reconstrói a ordem original (o array vem sorted, reordenamos por posição)
+  // A API retorna na ordem original (sorted só para exibição na legenda)
+  // Para o highlight precisamos da ordem do texto → usamos o índice original
+  // Como a API os ordena por importância, vamos só exibir o mapa de cores
+  const byWord = new Map(words.map((w) => [w.word, w.importance]));
+  // Pega todas as palavras na ordem em que aparecem (reconstruída do array)
+  const inOrder = [...words].sort((a, b) => {
+    // fallback: exibe na ordem em que vieram (já é a ordem do texto na API)
+    return 0;
+  });
+
+  return (
+    <p className="text-sm leading-loose text-gray-200 font-mono flex flex-wrap gap-1">
+      {inOrder.map((w, i) => {
+        const intensity = w.importance / max;
+        const bg =
+          intensity > 0.6
+            ? `rgba(239,68,68,${(intensity * 0.45).toFixed(2)})`
+            : intensity > 0.25
+            ? `rgba(245,158,11,${(intensity * 0.55).toFixed(2)})`
+            : "transparent";
+        return (
+          <span
+            key={i}
+            style={{ backgroundColor: bg, borderRadius: "4px", padding: "1px 4px" }}
+            title={`Δ cosseno: ${(w.importance * 100).toFixed(2)}%`}
+          >
+            {w.word}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
+// ─── Legenda compacta ──────────────────────────────────────────────────────────
+function GraphLegend({ isFake }: { isFake: boolean }) {
+  const color = isFake ? "bg-red-500" : "bg-emerald-500";
+  return (
+    <div className="flex items-center justify-center gap-6 text-xs text-gray-400 mt-3">
+      <span className="flex items-center gap-1.5">
+        <span className={`inline-block w-3 h-1.5 rounded-full ${color}`} /> Alta influência
+      </span>
+      <span className="flex items-center gap-1.5">
+        <span className="inline-block w-3 h-1.5 rounded-full bg-amber-500" /> Média
+      </span>
+      <span className="flex items-center gap-1.5">
+        <span className="inline-block w-3 h-1.5 rounded-full bg-gray-600" /> Baixa
+      </span>
+    </div>
+  );
+}
+
 const API_URL = "http://localhost:8000";
 
 export default function Home() {
@@ -26,14 +165,37 @@ export default function Home() {
     setLoading(true);
     setResult(null);
     try {
+      // 1. Dispara a análise e recebe o task_id imediatamente
       const res = await fetch(`${API_URL}/api/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url })
       });
-      const data = await res.json();
-      setResult(data);
-      fetchHistory();
+      const { task_id } = await res.json();
+
+      // 2. Polling até o resultado ficar pronto
+      await new Promise<void>((resolve) => {
+        const interval = setInterval(async () => {
+          try {
+            const poll = await fetch(`${API_URL}/api/result/${task_id}`);
+            const data = await poll.json();
+            if (data.status === "done") {
+              clearInterval(interval);
+              setResult(data);
+              fetchHistory();
+              resolve();
+            } else if (data.status === "error") {
+              clearInterval(interval);
+              console.error("Erro na análise:", data);
+              resolve();
+            }
+          } catch (e) {
+            clearInterval(interval);
+            console.error(e);
+            resolve();
+          }
+        }, 1500);
+      });
     } catch (e) {
       console.error(e);
     }
@@ -144,6 +306,21 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
+
+                {/* Grafo de Propagação — GNNExplainer */}
+                {result.graph_explanation && (
+                  <div className="mt-10 pt-8 border-t border-white/10">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                      Grafo de Propagação — Explicabilidade GNN
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-5 max-w-lg">
+                      Arestas mais espessas e coloridas indicam as interações que mais influenciaram
+                      o veredicto do modelo. Gerado via GNNExplainer (PyTorch Geometric).
+                    </p>
+                    <GraphViz explanation={result.graph_explanation} isFake={result.is_fake} />
+                    <GraphLegend isFake={result.is_fake} />
+                  </div>
+                )}
 
               </div>
             </div>

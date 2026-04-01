@@ -159,3 +159,31 @@ node_modules/
 
 # Databases
 *.db
+
+# Dataset massivo (extraído localmente, disponível no Hugging Face)
+14669616.zip
+dados_bluesky/
+
+# Arquivos de trabalho do LaTeX (gerados pelo Overleaf/compilação)
+GNN_TCC_extraido/
+GNN_TCC_atualizado.zip
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Modelos PyTorch treinados (grandes, não versionados)
+mesclagem/resultados/*.pth
+Blue Sky/data/raw/posts_coletados.csv
+Blue Sky/data/raw/reposts_coletados.csv
+Blue Sky/data/processed/
+
+# Credenciais
+.env

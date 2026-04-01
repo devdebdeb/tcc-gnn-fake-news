@@ -1,0 +1,48 @@
+# Dataset massivo (está no Hugging Face, não vai na imagem)
+14669616.zip
+dados_bluesky/
+
+# Ambiente virtual local
+.venv/
+venv/
+env/
+
+# Node
+frontend/web/node_modules/
+frontend/web/.next/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Modelos e dados de treinamento grandes (não necessários pra API)
+mesclagem/resultados/
+mesclagem/*.py
+UPFD/
+UPFD-GCN/
+LIAR/
+politifact/
+torch_geometric/
+
+# Dados coletados (regeneráveis)
+Blue\ Sky/data/
+
+# Arquivos de trabalho
+GNN_TCC.zip
+GNN_TCC_atualizado.zip
+GNN_TCC_extraido/
+*.db
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Credenciais (passadas via env vars no compose)
+.env
+
+# Outros
+.cursorignore
+.cursorindexingignore
+resultado_final_clusters.png
